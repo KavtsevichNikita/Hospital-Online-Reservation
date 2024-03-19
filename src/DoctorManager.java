@@ -37,31 +37,11 @@ public class DoctorManager {
 
     public Doctor findDoctorByName(String name) {
         for (Doctor doctor : doctors) {
-            if (doctor.getName().equals(name)) {
+            if (doctor.getName().equalsIgnoreCase(name)) {
                 return doctor;
             }
         }
         return null;
-    }
-
-    public boolean isDuplicateScheduleEntry(List<DayOfWeek> days, List<LocalTime> startTimes, List<LocalTime> endTimes, DayOfWeek day) {
-        for (int i = 0; i < days.size(); i++) {
-            if (days.get(i) == day) {
-
-                LocalTime startTime = startTimes.get(i);
-                LocalTime endTime = endTimes.get(i);
-                for (int j = 0; j < days.size(); j++) {
-                    if (j != i && days.get(j) == day) {
-                        LocalTime otherStartTime = startTimes.get(j);
-                        LocalTime otherEndTime = endTimes.get(j);
-                        if (!(endTime.isBefore(otherStartTime) || startTime.isAfter(otherEndTime))) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
     }
 }
 

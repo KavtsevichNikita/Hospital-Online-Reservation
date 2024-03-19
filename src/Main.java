@@ -1,4 +1,3 @@
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -29,10 +28,10 @@ public class Main {
             System.out.println("║                                      ║");
             System.out.println("║               PATIENTS:              ║");
             System.out.println("║   4 - Add a patient                  ║");
-            System.out.println("║   5 - View patient's appointments    ║");
-            System.out.println("║   6 - Book an appointment            ║");
-            System.out.println("║   7 - View list of all patients      ║");
-            System.out.println("║   8 - Remove a patient               ║");
+            System.out.println("║   5 - View list of all patients      ║");
+            System.out.println("║   6 - Remove a patient               ║");
+            System.out.println("║   7 - View patient's appointments    ║");
+            System.out.println("║   8 - Book an appointment            ║");
             System.out.println("╚══════════════════════════════════════╝");
 
             System.out.print("Choose an action: ");
@@ -53,16 +52,16 @@ public class Main {
                     addPatient();
                     break;
                 case 5:
-                    viewPatientAppointments();
-                    break;
-                case 6:
-                    bookAppointment();
-                    break;
-                case 7:
                     viewAllPatients();
                     break;
-                case 8:
+                case 6:
                     removePatient();
+                    break;
+                case 7:
+                    viewPatientAppointments();
+                    break;
+                case 8:
+                    bookAppointment();
                     break;
                 case 0:
                     System.out.println("Exiting the application...");
@@ -85,7 +84,7 @@ public class Main {
             }
 
             if (doctorManager.findDoctorByName(name) != null) {
-                System.out.println("\u001B[31mError: This patient already exists in the database.\u001B[0m");
+                System.out.println("\u001B[31mError: This doctor already exists in the database.\u001B[0m");
                 continue;
             }
 
@@ -312,13 +311,6 @@ public class Main {
         }
     }
 
-
-
-
-
-
-
-
     private static void viewPatientAppointments() {
         System.out.print("Enter patient's name: ");
         String name = scanner.nextLine();
@@ -342,6 +334,21 @@ public class Main {
 
     ///// Appointment
     private static void bookAppointment() {
+        System.out.print("Enter your name: ");
+        String name = scanner.nextLine().trim();
+
+        if (name.isEmpty()) {
+            System.out.println("\u001B[31m" + "Name cannot be empty. Please enter your name." + "\u001B[0m");
+            bookAppointment();
+            return;
+        }
+
+        Patient patient = patientManager.findPatientByName(name);
+        if (patient == null) {
+            System.out.println("\u001B[31m" + "Patient with such name not found. Please register." + "\u001B[0m");
+            return;
+        }
+
         System.out.print("Enter the doctor's specialization you want to book with: ");
         String specialization = scanner.nextLine();
 
@@ -365,98 +372,47 @@ public class Main {
         System.out.print("Choose a doctor: ");
         String doctorName = scanner.nextLine();
 
-        Doctor doctor =  doctorManager.findDoctorByName(doctorName);
-        if (doctor != null) {
-            System.out.println("Doctor's schedule for " + doctor.getName() + ":");
-            List<String> availableTimeSlots = generateAvailableTimeSlots(doctor.getSchedule());
-
-//            if (!availableTimeSlots.isEmpty()) {
-//                for (String slot : availableTimeSlots) {
-//                    System.out.println(slot);
-//                }
-//
-//                System.out.print("Choose an available time slot from the doctor's schedule: ");
-//                String time = scanner.nextLine();
-//
-//                boolean isAvailable = isTimeAvailable(doctor, time);
-//
-//                if (isAvailable) {
-//                    System.out.print("Enter your name: ");
-//                    String name = scanner.nextLine();
-//                    scanner.nextLine();
-//                    Patient patient =  patientManager.findPatientByName(name);
-//                    System.out.println(patient);
-//                    if (patient != null) {
-//                        if (appointmentManager.isTimeSlotOccupied(doctor, time)) {
-//                            System.out.println("\u001B[31m" + "Selected time slot is already occupied. Please choose another time." + "\u001B[0m"); // Red color
-//                        } else {
-//                            appointmentManager.bookAppointment(doctor, patient, time);
-//                            System.out.println("\u001B[32m" + "Appointment successfully booked." + "\u001B[0m"); // Green color
-//                        }
-//                    } else {
-//                        System.out.println("\u001B[31m" + "Patient with such ID not found. Please register." + "\u001B[0m"); // Red color
-//                    }
-//                } else {
-//                    System.out.println("\u001B[31m" + "Selected time slot is already occupied. Please choose another time." + "\u001B[0m"); // Red color
-//                }
-//            } else {
-//                System.out.println("No available time slots for today.");
-//            }
-        } else {
-            System.out.println("\u001B[31m" + "Doctor with such name not found." + "\u001B[0m"); // Red color
+        Doctor doctor = doctorManager.findDoctorByName(doctorName);
+        if (doctor == null) {
+            System.out.println("\u001B[31m" + "Doctor with such name not found." + "\u001B[0m");
+            return;
         }
-    }
 
+        System.out.println("Doctor's schedule for " + doctor.getName() + ":");
+        List<String> availableTimeSlots = appointmentManager.generateAvailableTimeSlots(doctor, doctor.getSchedule());
 
+        if (!availableTimeSlots.isEmpty()) {
+            for (String slot : availableTimeSlots) {
+                System.out.println(slot);
+            }
 
-    private static boolean isTimeAvailable(Doctor doctor, String time) {
-//        String[] timeParts = time.split("-");
-//        String startTime = timeParts[0];
-//        String endTime = timeParts.length > 1 ? timeParts[1] : startTime;
-//
-//        for (String slot : endTime) {
-//            String[] slotParts = slot.split("-");
-//            String slotStartTime = slotParts[0];
-//            String slotEndTime = slotParts.length > 1 ? slotParts[1] : slotStartTime;
-//
-//            if (startTime.equals(slotStartTime) || endTime.equals(slotEndTime)) {
-//                return true;
-//            }
-//            if (startTime.compareTo(slotStartTime) > 0 && endTime.compareTo(slotEndTime) < 0) {
-//                return true;
-//            }
-//        }
-//        return false;
+            String time;
+            boolean isAvailable = false;
+            do {
+                System.out.print("Choose an available time slot from the doctor's schedule: ");
+                time = scanner.nextLine().trim();
 
-        return true;
-    }
+                if (availableTimeSlots.contains(time)) {
+                    if (appointmentManager.isTimeSlotOccupied(doctor, time)) {
+                        boolean isSlotBooked = appointmentManager.isTimeSlotBooked(time, patient);
+                        if (!isSlotBooked) {
+                            isAvailable = true;
+                        } else {
+                            System.out.println("\u001B[31m" + "You already have an appointment with another doctor at this time." + "\u001B[0m"); // Красный цвет
+                        }
+                    } else {
+                        System.out.println("\u001B[31m" + "Selected time slot is already occupied. Please choose another time." + "\u001B[0m"); // Красный цвет
+                    }
+                } else {
+                    System.out.println("\u001B[31m" + "Invalid time slot. Please choose from the available time slots." + "\u001B[0m"); // Красный цвет
+                }
+            } while (!isAvailable);
 
-    private static List<String> generateAvailableTimeSlots(Schedule schedule) {
-//        List<String> availableTimeSlots = new ArrayList<>();
-//        List<String> slots = schedule.getAvailableSlots();
-//        for (String slot : slots) {
-//            String[] parts = slot.split(" ");
-//            String day = parts[0];
-//            String[] timings = parts[1].split("-");
-//            String startTime = timings[0];
-//            String endTime = timings[1];
-//
-//            int currentHour = Integer.parseInt(startTime.split(":")[0]);
-//            int currentMinute = Integer.parseInt(startTime.split(":")[1]);
-//
-//            int endHour = Integer.parseInt(endTime.split(":")[0]);
-//            int endMinute = Integer.parseInt(endTime.split(":")[1]);
-//
-//            while (currentHour < endHour || (currentHour == endHour && currentMinute < endMinute)) {
-//                availableTimeSlots.add(day + " " + String.format("%02d", currentHour) + ":" + String.format("%02d", currentMinute));
-//                currentMinute += 15;
-//                if (currentMinute >= 60) {
-//                    currentMinute -= 60;
-//                    currentHour++;
-//                }
-//            }
-//        }
-//        return availableTimeSlots;
-        return null;
+            appointmentManager.bookAppointment(doctor, patient, time);
+            System.out.println("\u001B[32m" + "Appointment successfully booked." + "\u001B[0m"); // Зеленый цвет
+
+        } else {
+            System.out.println("No available time slots for today.");
+        }
     }
 }
