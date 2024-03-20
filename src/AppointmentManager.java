@@ -9,7 +9,7 @@ public class AppointmentManager {
     }
 
     public void bookAppointment(Doctor doctor, Patient patient, String time) {
-        Appointment appointment = new Appointment(appointments.size() + 1, patient, doctor, time);
+        Appointment appointment = new Appointment(patient, doctor, time);
         appointments.add(appointment);
     }
 

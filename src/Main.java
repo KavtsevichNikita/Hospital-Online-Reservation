@@ -16,171 +16,181 @@ public class Main {
         int choice;
 
         do {
-            System.out.println("╔══════════════════════════════════════╗");
-            System.out.println("║                Menu:                 ║");
-            System.out.println("║                                      ║");
-            System.out.println("║   0 - Exit the application           ║");
-            System.out.println("║                                      ║");
-            System.out.println("║               DOCTORS:               ║");
-            System.out.println("║   1 - Add a doctor                   ║");
-            System.out.println("║   2 - View list of all doctors       ║");
-            System.out.println("║   3 - Remove a doctor                ║");
-            System.out.println("║                                      ║");
-            System.out.println("║               PATIENTS:              ║");
-            System.out.println("║   4 - Add a patient                  ║");
-            System.out.println("║   5 - View list of all patients      ║");
-            System.out.println("║   6 - Remove a patient               ║");
-            System.out.println("║   7 - View patient's appointments    ║");
-            System.out.println("║   8 - Book an appointment            ║");
-            System.out.println("╚══════════════════════════════════════╝");
+            try {
+                System.out.println("╔══════════════════════════════════════╗");
+                System.out.println("║                Menu:                 ║");
+                System.out.println("║                                      ║");
+                System.out.println("║   0 - Exit the application           ║");
+                System.out.println("║                                      ║");
+                System.out.println("║               DOCTORS:               ║");
+                System.out.println("║   1 - Add a doctor                   ║");
+                System.out.println("║   2 - View list of all doctors       ║");
+                System.out.println("║   3 - Remove a doctor                ║");
+                System.out.println("║                                      ║");
+                System.out.println("║               PATIENTS:              ║");
+                System.out.println("║   4 - Add a patient                  ║");
+                System.out.println("║   5 - View list of all patients      ║");
+                System.out.println("║   6 - Remove a patient               ║");
+                System.out.println("║   7 - View patient's appointments    ║");
+                System.out.println("║   8 - Book an appointment            ║");
+                System.out.println("╚══════════════════════════════════════╝");
 
-            System.out.print("Choose an action: ");
-            choice = scanner.nextInt();
-            scanner.nextLine();
+                System.out.print("Choose an action: ");
+                choice = scanner.nextInt();
+                scanner.nextLine();
 
-            switch (choice) {
-                case 1:
-                    addDoctor();
-                    break;
-                case 2:
-                    viewAllDoctors();
-                    break;
-                case 3:
-                    removeDoctor();
-                    break;
-                case 4:
-                    addPatient();
-                    break;
-                case 5:
-                    viewAllPatients();
-                    break;
-                case 6:
-                    removePatient();
-                    break;
-                case 7:
-                    viewPatientAppointments();
-                    break;
-                case 8:
-                    bookAppointment();
-                    break;
-                case 0:
-                    System.out.println("Exiting the application...");
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please try again.");
+                switch (choice) {
+                    case 1:
+                        addDoctor();
+                        break;
+                    case 2:
+                        viewAllDoctors();
+                        break;
+                    case 3:
+                        removeDoctor();
+                        break;
+                    case 4:
+                        addPatient();
+                        break;
+                    case 5:
+                        viewAllPatients();
+                        break;
+                    case 6:
+                        removePatient();
+                        break;
+                    case 7:
+                        viewPatientAppointments();
+                        break;
+                    case 8:
+                        bookAppointment();
+                        break;
+                    case 0:
+                        System.out.println("Exiting the application...");
+                        break;
+                    default:
+                        System.out.println("Invalid choice. Please try again.");
+                }
+            } catch (Exception e) {
+                System.out.println("An error occurred: " + e.getMessage());
+                scanner.nextLine();
+                choice = -1;
             }
         } while (choice != 0);
     }
 
     ///// Doctor
     private static void addDoctor() {
-        System.out.println("\u001B[34m====================  ADD NEW DOCTOR  ====================\u001B[0m");
-        String name;
-        do {
-            System.out.print("\u001B[3mEnter doctor's name: \u001B[0m");
-            name = scanner.nextLine();
-            if (name.isEmpty()) {
-                System.out.println("\u001B[31mError: Doctor's name cannot be empty. Please fill in the data.\u001B[0m");
-            }
-
-            if (doctorManager.findDoctorByName(name) != null) {
-                System.out.println("\u001B[31mError: This doctor already exists in the database.\u001B[0m");
-                continue;
-            }
-
-        } while (name.isEmpty() || doctorManager.findDoctorByName(name) != null);
-
-        String specialization;
-        do {
-            System.out.print("\u001B[3mEnter doctor's specialization: \u001B[0m");
-            specialization = scanner.nextLine();
-            if (specialization.isEmpty()) {
-                System.out.println("\u001B[31mError: Doctor's specialization cannot be empty. Please fill in the data.\u001B[0m");
-            }
-        } while (specialization.isEmpty());
-
-        System.out.println("------------------------------------------------------");
-
-        Schedule doctorSchedule = new Schedule();
-
-        boolean addMore = true;
-
-        String choice;
-        do {
-            DayOfWeek day = null;
-            int dayChoice;
+        try {
+            System.out.println("\u001B[34m====================  ADD NEW DOCTOR  ====================\u001B[0m");
+            String name;
             do {
-                System.out.println("\u001B[3mSelect day of the week: \u001B[0m");
-                System.out.println("1. Monday");
-                System.out.println("2. Tuesday");
-                System.out.println("3. Wednesday");
-                System.out.println("4. Thursday");
-                System.out.println("5. Friday");
-                System.out.println("6. Saturday");
-                System.out.println("7. Sunday");
-                System.out.print("Enter your choice (1-7): ");
-                if (scanner.hasNextInt()) {
-                    dayChoice = scanner.nextInt();
-                    if (dayChoice >= 1 && dayChoice <= 7) {
-                        day = DayOfWeek.of(dayChoice);
+                System.out.print("\u001B[3mEnter doctor's name: \u001B[0m");
+                name = scanner.nextLine();
+                if (name.isEmpty()) {
+                    System.out.println("\u001B[31mError: Doctor's name cannot be empty. Please fill in the data.\u001B[0m");
+                }
+
+                if (doctorManager.findDoctorByName(name) != null) {
+                    System.out.println("\u001B[31mError: This doctor already exists in the database.\u001B[0m");
+                    continue;
+                }
+
+            } while (name.isEmpty() || doctorManager.findDoctorByName(name) != null);
+
+            String specialization;
+            do {
+                System.out.print("\u001B[3mEnter doctor's specialization: \u001B[0m");
+                specialization = scanner.nextLine();
+                if (specialization.isEmpty()) {
+                    System.out.println("\u001B[31mError: Doctor's specialization cannot be empty. Please fill in the data.\u001B[0m");
+                }
+            } while (specialization.isEmpty());
+
+            System.out.println("------------------------------------------------------");
+
+            Schedule doctorSchedule = new Schedule();
+
+            boolean addMore = true;
+            String choice;
+            do {
+                DayOfWeek day = null;
+                int dayChoice;
+                do {
+                    System.out.println("\u001B[3mSelect day of the week: \u001B[0m");
+                    System.out.println("1. Monday");
+                    System.out.println("2. Tuesday");
+                    System.out.println("3. Wednesday");
+                    System.out.println("4. Thursday");
+                    System.out.println("5. Friday");
+                    System.out.println("6. Saturday");
+                    System.out.println("7. Sunday");
+                    System.out.print("Enter your choice (1-7): ");
+                    if (scanner.hasNextInt()) {
+                        dayChoice = scanner.nextInt();
+                        if (dayChoice >= 1 && dayChoice <= 7) {
+                            day = DayOfWeek.of(dayChoice);
+                        } else {
+                            System.out.println("\u001B[31mError: Invalid day selection. Please enter a number between 1 and 7.\u001B[0m");
+                        }
                     } else {
-                        System.out.println("\u001B[31mError: Invalid day selection. Please enter a number between 1 and 7.\u001B[0m");
+                        System.out.println("\u001B[31mError: Invalid input. Please enter a number between 1 and 7.\u001B[0m");
+                        scanner.next();
                     }
-                } else {
-                    System.out.println("\u001B[31mError: Invalid input. Please enter a number between 1 and 7.\u001B[0m");
-                    scanner.next();
+                } while (day == null);
+
+                if (doctorSchedule.hasSlot(day)) {
+                    System.out.println("\u001B[31mError: You are already working at this time on " + day + ". Please choose another time.\u001B[0m");
+                    continue;
                 }
-            } while (day == null);
 
-            if (doctorSchedule.hasSlot(day)) {
-                System.out.println("\u001B[31mError: You are already working at this time on " + day + ". Please choose another time.\u001B[0m");
-                continue;
-            }
-
-            LocalTime startTime = null;
-            do {
-                System.out.print("\u001B[3mEnter start time (HH:MM): \u001B[0m");
-                String startTimeStr = scanner.next();
-                try {
-                    startTime = LocalTime.parse(startTimeStr);
-                } catch (Exception e) {
-                    System.out.println("\u001B[31mError: Invalid time format. Please enter time in HH:MM format.\u001B[0m");
-                }
-            } while (startTime == null);
-
-            LocalTime endTime = null;
-            do {
-                System.out.print("\u001B[3mEnter end time (HH:MM): \u001B[0m");
-                String endTimeStr = scanner.next();
-                try {
-                    endTime = LocalTime.parse(endTimeStr);
-                    if (endTime.isBefore(startTime)) {
-                        System.out.println("\u001B[31mError: End time cannot be before start time.\u001B[0m");
-                        endTime = null;
+                LocalTime startTime = null;
+                do {
+                    System.out.print("\u001B[3mEnter start time (HH:MM): \u001B[0m");
+                    String startTimeStr = scanner.next();
+                    try {
+                        startTime = LocalTime.parse(startTimeStr);
+                    } catch (Exception e) {
+                        System.out.println("\u001B[31mError: Invalid time format. Please enter time in HH:MM format.\u001B[0m");
                     }
-                } catch (Exception e) {
-                    System.out.println("\u001B[31mError: Invalid time format. Please enter time in HH:MM format.\u001B[0m");
-                }
-            } while (endTime == null);
+                } while (startTime == null);
 
-            doctorSchedule.addSlot(day, startTime, endTime);
+                LocalTime endTime = null;
+                do {
+                    System.out.print("\u001B[3mEnter end time (HH:MM): \u001B[0m");
+                    String endTimeStr = scanner.next();
+                    try {
+                        endTime = LocalTime.parse(endTimeStr);
+                        if (endTime.isBefore(startTime)) {
+                            System.out.println("\u001B[31mError: End time cannot be before start time.\u001B[0m");
+                            endTime = null;
+                        }
+                    } catch (Exception e) {
+                        System.out.println("\u001B[31mError: Invalid time format. Please enter time in HH:MM format.\u001B[0m");
+                    }
+                } while (endTime == null);
 
-            do {
-                System.out.print("\u001B[3mDo you want to add another schedule? (yes/no): \u001B[0m");
-                choice = scanner.next();
-                if (!(choice.equalsIgnoreCase("yes") || choice.equalsIgnoreCase("no"))) {
-                    System.out.println("\u001B[31mError: Invalid input. Please enter 'yes' or 'no'.\u001B[0m");
-                }
-            } while (!(choice.equalsIgnoreCase("yes") || choice.equalsIgnoreCase("no")));
+                doctorSchedule.addSlot(day, startTime, endTime);
 
-            addMore = choice.equalsIgnoreCase("yes");
-        } while (addMore);
+                do {
+                    System.out.print("\u001B[3mDo you want to add another schedule? (yes/no): \u001B[0m");
+                    choice = scanner.next();
+                    if (!(choice.equalsIgnoreCase("yes") || choice.equalsIgnoreCase("no"))) {
+                        System.out.println("\u001B[31mError: Invalid input. Please enter 'yes' or 'no'.\u001B[0m");
+                    }
+                } while (!(choice.equalsIgnoreCase("yes") || choice.equalsIgnoreCase("no")));
 
-        Doctor doctor = new Doctor(doctorManager.getDoctors().size() + 1, name, specialization, doctorSchedule);
-        doctorManager.registerDoctor(doctor);
-        System.out.println("-----------------------------------");
-        System.out.println("\u001B[32mDoctor added: \u001B[1m" + doctor.getName() + "\u001B[0m");
-        System.out.println("\u001B[32m==================== ADD NEW DOCTOR FINISHED SUCCESSFULLY ====================\u001B[0m");
+                addMore = choice.equalsIgnoreCase("yes");
+            } while (addMore);
+
+            Doctor doctor = new Doctor(String.valueOf(doctorManager.getDoctors().size() + 1), name, specialization, doctorSchedule);
+
+            doctorManager.registerDoctor(doctor);
+            System.out.println("-----------------------------------");
+            System.out.println("\u001B[32mDoctor added: \u001B[1m" + doctor.getName() + "\u001B[0m");
+            System.out.println("\u001B[32m==================== ADD NEW DOCTOR FINISHED SUCCESSFULLY ====================\u001B[0m");
+        } catch (Exception e) {
+            System.out.println("An error occurred while adding a doctor: " + e.getMessage());
+        }
     }
 
     private static void viewAllDoctors() {
@@ -223,7 +233,7 @@ public class Main {
             System.out.print("\u001B[3mEnter doctor's name to remove: \u001B[0m");
             String name = scanner.nextLine();
 
-            doctorManager.removeDoctor(name, availableDoctors);
+            doctorManager.removeDoctor(name);
         }
     }
 
@@ -234,6 +244,7 @@ public class Main {
         String name;
         String id;
         String phoneNumber;
+
         do {
             System.out.print("\u001B[3mEnter patient's name, surname: \u001B[0m");
             name = scanner.nextLine();
@@ -293,7 +304,6 @@ public class Main {
 
     private static void removePatient() {
         System.out.println("\u001B[34m====================  REMOVE PATIENT  ====================\u001B[0m");
-
         List<Patient> availablePatients = patientManager.getPatients();
 
         if (availablePatients.isEmpty()) {
@@ -307,10 +317,11 @@ public class Main {
             System.out.print("\u001B[3mEnter patient's name to remove: \u001B[0m");
             String name = scanner.nextLine();
 
-            patientManager.removePatient(name, availablePatients);
+            patientManager.removePatient(name);
         }
     }
 
+    ///// Appointment
     private static void viewPatientAppointments() {
         System.out.print("Enter patient's name: ");
         String name = scanner.nextLine();
@@ -331,8 +342,6 @@ public class Main {
             System.out.println("Patient with such name and ID not found.");
         }
     }
-
-    ///// Appointment
     private static void bookAppointment() {
         System.out.print("Enter your name: ");
         String name = scanner.nextLine().trim();

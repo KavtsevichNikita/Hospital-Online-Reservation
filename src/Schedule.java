@@ -1,11 +1,12 @@
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 class Schedule {
-    private Map<DayOfWeek, LocalTime[]> scheduleMap;
+    private final Map<DayOfWeek, LocalTime[]> scheduleMap;
 
     public Schedule() {
         this.scheduleMap = new HashMap<>();

@@ -1,24 +1,19 @@
-import java.util.List;
+public class Doctor extends Person {
+    private String specialization;
+    private Schedule schedule;
 
-public class Doctor {
-    int id;
-    String name;
-    String specialization;
-    Schedule schedule;
-
-    public Doctor(int id, String name, String specialization, Schedule schedule) {
-        this.id = id;
-        this.name = name;
+    public Doctor(String id, String name, String specialization, Schedule schedule) {
+        super(id, name);
         this.specialization = specialization;
         this.schedule = schedule;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public String getSpecialization() {
         return specialization;
+    }
+
+    public void setSpecialization(String specialization) {
+        this.specialization = specialization;
     }
 
     public Schedule getSchedule() {
@@ -29,3 +24,4 @@ public class Doctor {
         this.schedule = schedule;
     }
 }
+

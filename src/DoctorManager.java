@@ -1,11 +1,9 @@
-import javax.print.Doc;
-import java.time.DayOfWeek;
-import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class DoctorManager {
-    private List<Doctor> doctors;
+    private final List<Doctor> doctors;
 
     public DoctorManager() {
         this.doctors = new ArrayList<>();
@@ -19,20 +17,17 @@ public class DoctorManager {
         doctors.add(doctor);
     }
 
-    public void removeDoctor(String name, List<Doctor> doctors) {
-        Doctor doctorToRemove = null;
-        for (Doctor doctor : doctors) {
+    public void removeDoctor(String name) {
+        Iterator<Doctor> iterator = doctors.iterator();
+        while (iterator.hasNext()) {
+            Doctor doctor = iterator.next();
             if (doctor.getName().equalsIgnoreCase(name)) {
-                doctorToRemove = doctor;
-                break;
+                iterator.remove();
+                System.out.println("\u001B[32m==================== DOCTOR \"" + name.toUpperCase() + "\" DELETED SUCCESSFULLY ====================\u001B[0m");
+                return;
             }
         }
-        if (doctorToRemove != null) {
-            doctors.remove(doctorToRemove);
-            System.out.println("\u001B[32m==================== DOCTOR \"" + name.toUpperCase() + "\" DELETED SUCCESSFULLY ====================\u001B[0m");
-        } else {
-            System.out.println("\u001B[31m==================== Error: Doctor \"" + name.toUpperCase() + "\" NOT FOUND ==========================\u001B[0m");
-        }
+        System.out.println("\u001B[31m==================== Error: Doctor \"" + name.toUpperCase() + "\" NOT FOUND ==========================\u001B[0m");
     }
 
     public Doctor findDoctorByName(String name) {
