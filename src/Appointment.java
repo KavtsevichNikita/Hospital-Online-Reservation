@@ -1,9 +1,9 @@
 import java.util.Objects;
 
 public class Appointment implements Comparable<Appointment> {
-    private Patient patient;
-    private Doctor doctor;
-    private String time;
+    private final Patient patient;
+    private final Doctor doctor;
+    private final String time;
 
     public Appointment(Patient patient, Doctor doctor, String time) {
         this.patient = patient;
@@ -31,8 +31,7 @@ public class Appointment implements Comparable<Appointment> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Appointment)) return false;
-        Appointment that = (Appointment) o;
+        if (!(o instanceof Appointment that)) return false;
         return Objects.equals(patient, that.patient) &&
                 Objects.equals(doctor, that.doctor) &&
                 Objects.equals(time, that.time);
@@ -43,3 +42,5 @@ public class Appointment implements Comparable<Appointment> {
         return Objects.hash(patient, doctor, time);
     }
 }
+
+

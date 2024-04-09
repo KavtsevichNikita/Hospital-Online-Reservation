@@ -4,38 +4,45 @@ import java.util.Scanner;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 
-
 public class Main {
     private static Scanner scanner = new Scanner(System.in);
     private static DoctorManager doctorManager = new DoctorManager();
     private static PatientManager patientManager = new PatientManager();
     private static AppointmentManager appointmentManager = new AppointmentManager();
+    private static Logger logger = new Logger();
+    private static Patient patient1 = new Patient("P001", "Alice Johnson", "1234567890");
+    private static Patient patient2 = new Patient("P002", "Bob Brown", "0987654321");
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
         int choice;
+
+        // init data for patients
+        patientManager.registerPatient(patient1);
+        patientManager.registerPatient(patient2);
 
         do {
             try {
-                System.out.println("╔══════════════════════════════════════╗");
-                System.out.println("║                Menu:                 ║");
-                System.out.println("║                                      ║");
-                System.out.println("║   0 - Exit the application           ║");
-                System.out.println("║                                      ║");
-                System.out.println("║               DOCTORS:               ║");
-                System.out.println("║   1 - Add a doctor                   ║");
-                System.out.println("║   2 - View list of all doctors       ║");
-                System.out.println("║   3 - Remove a doctor                ║");
-                System.out.println("║                                      ║");
-                System.out.println("║               PATIENTS:              ║");
-                System.out.println("║   4 - Add a patient                  ║");
-                System.out.println("║   5 - View list of all patients      ║");
-                System.out.println("║   6 - Remove a patient               ║");
-                System.out.println("║   7 - View patient's appointments    ║");
-                System.out.println("║   8 - Book an appointment            ║");
-                System.out.println("╚══════════════════════════════════════╝");
+                logger.logInfo("╔══════════════════════════════════════╗");
+                logger.logInfo("║                Menu:                 ║");
+                logger.logInfo("║                                      ║");
+                logger.logInfo("║   0 - Exit the application           ║");
+                logger.logInfo("║                                      ║");
+                logger.logInfo("║               DOCTORS:               ║");
+                logger.logInfo("║   1 - Add a doctor                   ║");
+                logger.logInfo("║   2 - View list of all doctors       ║");
+                logger.logInfo("║   3 - Edit a doctor                  ║");
+                logger.logInfo("║   4 - Remove a doctor                ║");
+                logger.logInfo("║                                      ║");
+                logger.logInfo("║               PATIENTS:              ║");
+                logger.logInfo("║   5 - Add a patient                  ║");
+                logger.logInfo("║   6 - View list of all patients      ║");
+                logger.logInfo("║   7 - Edit a patient                 ║");
+                logger.logInfo("║   8 - Remove a patient               ║");
+                logger.logInfo("║   9 - View patient's appointments    ║");
+                logger.logInfo("║   10 - Book an appointment           ║");
+                logger.logInfo("╚══════════════════════════════════════╝");
 
-                System.out.print("Choose an action: ");
+                logger.logInfo("Choose an action: ");
                 choice = scanner.nextInt();
                 scanner.nextLine();
 
@@ -47,135 +54,156 @@ public class Main {
                         viewAllDoctors();
                         break;
                     case 3:
-                        removeDoctor();
+                        editDoctor();
                         break;
                     case 4:
-                        addPatient();
+                        removeDoctor();
                         break;
                     case 5:
-                        viewAllPatients();
+                        addPatient();
                         break;
                     case 6:
-                        removePatient();
+                        viewAllPatients();
                         break;
                     case 7:
-                        viewPatientAppointments();
+                        editPatient();
                         break;
                     case 8:
+                        removePatient();
+                        break;
+                    case 9:
+                        viewPatientAppointments();
+                        break;
+                    case 10:
                         bookAppointment();
                         break;
                     case 0:
-                        System.out.println("Exiting the application...");
+                        logger.logInfo("Exiting the application...");
                         break;
                     default:
-                        System.out.println("Invalid choice. Please try again.");
+                        logger.logError("Invalid choice. Please try again.");
                 }
             } catch (Exception e) {
-                System.out.println("An error occurred: " + e.getMessage());
+                logger.logError("An error occurred: " + e.getMessage());
                 scanner.nextLine();
                 choice = -1;
             }
         } while (choice != 0);
     }
 
-    ///// Doctor
     private static void addDoctor() {
         try {
-            System.out.println("\u001B[34m====================  ADD NEW DOCTOR  ====================\u001B[0m");
-            String name;
+            logger.logInfo("====================  ADD NEW DOCTOR  ====================");
+
+            String id, name, specialization, choice;
+            Schedule doctorSchedule = new Schedule();
+            boolean addMore = true;
+            LocalTime startTime = null;
+            LocalTime endTime = null;
+
+            // doctor's id
             do {
-                System.out.print("\u001B[3mEnter doctor's name: \u001B[0m");
+                logger.logCustom("Enter doctor's id: ");
+                id = scanner.nextLine();
+                if (id.isEmpty()) {
+                    logger.logError("Doctor's id cannot be empty. Please fill in the data.");
+                }
+
+                if (doctorManager.findDoctorById(id)) {
+                    logger.logError("Doctor with such id already exists in the database.");
+                    continue;
+                }
+
+            } while (id.isEmpty() || doctorManager.findDoctorById(id));
+
+            // doctor's name
+            do {
+                logger.logCustom("Enter doctor's name: ");
                 name = scanner.nextLine();
                 if (name.isEmpty()) {
-                    System.out.println("\u001B[31mError: Doctor's name cannot be empty. Please fill in the data.\u001B[0m");
+                    logger.logError("Doctor's name cannot be empty. Please fill in the data.");
                 }
 
                 if (doctorManager.findDoctorByName(name) != null) {
-                    System.out.println("\u001B[31mError: This doctor already exists in the database.\u001B[0m");
+                    logger.logError("This doctor already exists in the database.");
                     continue;
                 }
 
             } while (name.isEmpty() || doctorManager.findDoctorByName(name) != null);
 
-            String specialization;
+            // doctor specialization
             do {
-                System.out.print("\u001B[3mEnter doctor's specialization: \u001B[0m");
+                logger.logCustom("Enter doctor's specialization: ");
                 specialization = scanner.nextLine();
                 if (specialization.isEmpty()) {
-                    System.out.println("\u001B[31mError: Doctor's specialization cannot be empty. Please fill in the data.\u001B[0m");
+                    logger.logError("Doctor's specialization cannot be empty. Please fill in the data.");
                 }
             } while (specialization.isEmpty());
 
-            System.out.println("------------------------------------------------------");
+            logger.logInfo("------------------------------------------------------");
 
-            Schedule doctorSchedule = new Schedule();
-
-            boolean addMore = true;
-            String choice;
             do {
                 DayOfWeek day = null;
                 int dayChoice;
                 do {
-                    System.out.println("\u001B[3mSelect day of the week: \u001B[0m");
-                    System.out.println("1. Monday");
-                    System.out.println("2. Tuesday");
-                    System.out.println("3. Wednesday");
-                    System.out.println("4. Thursday");
-                    System.out.println("5. Friday");
-                    System.out.println("6. Saturday");
-                    System.out.println("7. Sunday");
-                    System.out.print("Enter your choice (1-7): ");
+                    logger.logCustom("Select day of the week:");
+                    logger.logCustom("1. Monday");
+                    logger.logCustom("2. Tuesday");
+                    logger.logCustom("3. Wednesday");
+                    logger.logCustom("4. Thursday");
+                    logger.logCustom("5. Friday");
+                    logger.logCustom("6. Saturday");
+                    logger.logCustom("7. Sunday");
+                    logger.logCustom("Enter your choice (1-7): ");
                     if (scanner.hasNextInt()) {
                         dayChoice = scanner.nextInt();
                         if (dayChoice >= 1 && dayChoice <= 7) {
                             day = DayOfWeek.of(dayChoice);
                         } else {
-                            System.out.println("\u001B[31mError: Invalid day selection. Please enter a number between 1 and 7.\u001B[0m");
+                            logger.logError("Invalid day selection. Please enter a number between 1 and 7.");
                         }
                     } else {
-                        System.out.println("\u001B[31mError: Invalid input. Please enter a number between 1 and 7.\u001B[0m");
+                        logger.logError("Invalid input. Please enter a number between 1 and 7.");
                         scanner.next();
                     }
                 } while (day == null);
 
                 if (doctorSchedule.hasSlot(day)) {
-                    System.out.println("\u001B[31mError: You are already working at this time on " + day + ". Please choose another time.\u001B[0m");
+                    logger.logError("You are already working at this day. Please choose another day.");
                     continue;
                 }
 
-                LocalTime startTime = null;
                 do {
-                    System.out.print("\u001B[3mEnter start time (HH:MM): \u001B[0m");
+                    logger.logCustom("Enter start time (HH:MM): ");
                     String startTimeStr = scanner.next();
                     try {
                         startTime = LocalTime.parse(startTimeStr);
                     } catch (Exception e) {
-                        System.out.println("\u001B[31mError: Invalid time format. Please enter time in HH:MM format.\u001B[0m");
+                        logger.logError("Invalid time format. Please enter time in HH:MM format.");
                     }
                 } while (startTime == null);
 
-                LocalTime endTime = null;
                 do {
-                    System.out.print("\u001B[3mEnter end time (HH:MM): \u001B[0m");
+                    logger.logCustom("Enter end time (HH:MM): ");
                     String endTimeStr = scanner.next();
                     try {
                         endTime = LocalTime.parse(endTimeStr);
                         if (endTime.isBefore(startTime)) {
-                            System.out.println("\u001B[31mError: End time cannot be before start time.\u001B[0m");
+                            logger.logError("End time cannot be before start time.");
                             endTime = null;
                         }
                     } catch (Exception e) {
-                        System.out.println("\u001B[31mError: Invalid time format. Please enter time in HH:MM format.\u001B[0m");
+                        logger.logError("Invalid time format. Please enter time in HH:MM format.");
                     }
                 } while (endTime == null);
 
                 doctorSchedule.addSlot(day, startTime, endTime);
 
                 do {
-                    System.out.print("\u001B[3mDo you want to add another schedule? (yes/no): \u001B[0m");
+                    logger.logCustom("Do you want to add another schedule? (yes/no): ");
                     choice = scanner.next();
                     if (!(choice.equalsIgnoreCase("yes") || choice.equalsIgnoreCase("no"))) {
-                        System.out.println("\u001B[31mError: Invalid input. Please enter 'yes' or 'no'.\u001B[0m");
+                        logger.logError("Invalid input. Please enter 'yes' or 'no'.");
                     }
                 } while (!(choice.equalsIgnoreCase("yes") || choice.equalsIgnoreCase("no")));
 
@@ -185,180 +213,355 @@ public class Main {
             Doctor doctor = new Doctor(String.valueOf(doctorManager.getDoctors().size() + 1), name, specialization, doctorSchedule);
 
             doctorManager.registerDoctor(doctor);
-            System.out.println("-----------------------------------");
-            System.out.println("\u001B[32mDoctor added: \u001B[1m" + doctor.getName() + "\u001B[0m");
-            System.out.println("\u001B[32m==================== ADD NEW DOCTOR FINISHED SUCCESSFULLY ====================\u001B[0m");
+
+            logger.logCustom("-----------------------------------");
+            logger.logInfo("Doctor added: " + doctor.getName());
+            logger.logInfo("==================== ADD NEW DOCTOR FINISHED SUCCESSFULLY ====================");
         } catch (Exception e) {
-            System.out.println("An error occurred while adding a doctor: " + e.getMessage());
+            logger.logError("An error occurred while adding a doctor: " + e.getMessage());
         }
     }
-
     private static void viewAllDoctors() {
-        System.out.println("\u001B[34m==================== DOCTORS LIST ====================\u001B[0m");
+        logger.logInfo("==================== DOCTORS LIST ====================");
 
         if (doctorManager.getDoctors().isEmpty()) {
-            System.out.println("DOCTORS NOT FOUND");
+            logger.logCustom("Doctors not found");
         } else {
             for (Doctor doctor : doctorManager.getDoctors()) {
-                System.out.println("\u001B[32m========= Doctor \u001B[1m" + doctor.getName() + " =========\u001B[0m");
-                System.out.println("Name: " + doctor.getName());
-                System.out.println("Specialization: " + doctor.getSpecialization());
-                System.out.println("Schedule:");
+                logger.logInfo("========= Doctor " + doctor.getName() + " =========");
+                logger.logCustom("Name: " + doctor.getName());
+                logger.logCustom("Specialization: " + doctor.getSpecialization());
+                logger.logCustom("Schedule:");
                 List<String> availableSlots = doctor.getSchedule().getAvailableSlots();
                 if (availableSlots.isEmpty()) {
-                    System.out.println("No available slots");
+                    logger.logCustom("No available slots");
                 } else {
                     for (String slot : availableSlots) {
-                        System.out.println(slot);
+                        logger.logCustom(slot);
                     }
                 }
-                System.out.println("--------------------------");
             }
         }
     }
-
     private static void removeDoctor() {
-        System.out.println("\u001B[34m====================  REMOVE DOCTOR  ====================\u001B[0m");
+        logger.logInfo("====================  REMOVE DOCTOR  ====================");
 
         List<Doctor> availableDoctors = doctorManager.getDoctors();
 
         if (availableDoctors.isEmpty()) {
-            System.out.println("\u001B[34mDoctors list is empty!\u001B[0m");
-        } else {
-            System.out.println("------ Doctors list ------");
-
-            for (Doctor doctor : availableDoctors) {
-                System.out.println(doctor.getName());
-            }
-            System.out.print("\u001B[3mEnter doctor's name to remove: \u001B[0m");
-            String name = scanner.nextLine();
-
-            doctorManager.removeDoctor(name);
+            logger.logCustom("Doctors list is empty!");
+            return;
         }
+
+        logger.logCustom("------ Doctors list ------");
+        availableDoctors.forEach(doctor -> logger.logCustom(doctor.getName()));
+
+        logger.logCustom("Enter doctor's name to remove: ");
+        String name = scanner.nextLine();
+
+        doctorManager.removeDoctor(name);  // remove doctor
     }
+    private static void editDoctor() {
+        logger.logInfo("====================  EDIT DOCTOR INFORMATION  ====================");
 
-    ///// Patient
+        List<Doctor> doctors = doctorManager.getDoctors();
+        if (doctors.isEmpty()) {
+            logger.logError("No doctors found.");
+            return;
+        }
+
+        logger.logInfo("Select a doctor to edit:");
+        for (int i = 0; i < doctors.size(); i++) {
+            logger.logCustom((i + 1) + ". " + doctors.get(i).getName());
+        }
+
+        logger.logCustom("Enter the number of the doctor you want to edit: ");
+        int doctorIndex = scanner.nextInt();
+        scanner.nextLine();
+
+        if (doctorIndex < 1 || doctorIndex > doctors.size()) {
+            logger.logError("Invalid doctor number.");
+            return;
+        }
+
+        Doctor doctorToEdit = doctors.get(doctorIndex - 1);
+
+        logger.logCustom("Current Name: " + doctorToEdit.getName());
+        logger.logCustom("Current Specialization: " + doctorToEdit.getSpecialization());
+        logger.logCustom("Current Schedule: " + doctorToEdit.getSchedule());
+
+        logger.logCustom("Enter the new name (or leave empty to keep current): ");
+        String newName = scanner.nextLine().trim();
+        if (!newName.isEmpty()) {
+            doctorToEdit.setName(newName);
+            logger.logInfo("Name updated successfully.");
+        }
+
+        logger.logCustom("Enter the new specialization (or leave empty to keep current): ");
+        String newSpecialization = scanner.nextLine().trim();
+        if (!newSpecialization.isEmpty()) {
+            doctorToEdit.setSpecialization(newSpecialization);
+            logger.logInfo("Specialization updated successfully.");
+        }
+
+        logger.logCustom("Would you like to edit the schedule? (yes/no): ");
+        String editScheduleChoice = scanner.nextLine().trim();
+        if (editScheduleChoice.equalsIgnoreCase("yes")) {
+            editDoctorSchedule(doctorToEdit);
+        }
+
+        logger.logInfo("==================== EDIT DOCTOR INFORMATION FINISHED ====================");
+    }
+    private static void editDoctorSchedule(Doctor doctorToEdit) {
+        logger.logInfo("====================  EDIT DOCTOR SCHEDULE  ====================");
+
+        Schedule schedule = doctorToEdit.getSchedule();
+
+        logger.logInfo("Current schedule for Doctor " + doctorToEdit.getName() + ":");
+        List<String> availableSlots = schedule.getAvailableSlots();
+        if (!availableSlots.isEmpty()) {
+            for (String slot : availableSlots) {
+                logger.logCustom(slot);
+            }
+        } else {
+            logger.logCustom("No available slots for the current schedule.");
+            return;
+        }
+
+        Schedule newSchedule = new Schedule();
+        boolean addMore = true;
+        do {
+            DayOfWeek day = null;
+            int dayChoice;
+            do {
+                logger.logCustom("Select day of the week:");
+                logger.logCustom("1. Monday");
+                logger.logCustom("2. Tuesday");
+                logger.logCustom("3. Wednesday");
+                logger.logCustom("4. Thursday");
+                logger.logCustom("5. Friday");
+                logger.logCustom("6. Saturday");
+                logger.logCustom("7. Sunday");
+                logger.logCustom("Enter your choice (1-7): ");
+                if (scanner.hasNextInt()) {
+                    dayChoice = scanner.nextInt();
+                    if (dayChoice >= 1 && dayChoice <= 7) {
+                        day = DayOfWeek.of(dayChoice);
+                    } else {
+                        logger.logError("Invalid day selection. Please enter a number between 1 and 7.");
+                    }
+                } else {
+                    logger.logError("Invalid input. Please enter a number between 1 and 7.");
+                    scanner.next();
+                }
+            } while (day == null);
+
+            LocalTime startTime = null;
+            do {
+                logger.logCustom("Enter start time (HH:MM): ");
+                String startTimeStr = scanner.next();
+                try {
+                    startTime = LocalTime.parse(startTimeStr);
+                } catch (Exception e) {
+                    logger.logError("Invalid time format. Please enter time in HH:MM format.");
+                }
+            } while (startTime == null);
+
+            LocalTime endTime = null;
+            do {
+                logger.logCustom("Enter end time (HH:MM): ");
+                String endTimeStr = scanner.next();
+                try {
+                    endTime = LocalTime.parse(endTimeStr);
+                    if (endTime.isBefore(startTime)) {
+                        logger.logError("End time cannot be before start time.");
+                        endTime = null;
+                    }
+                } catch (Exception e) {
+                    logger.logError("Invalid time format. Please enter time in HH:MM format.");
+                }
+            } while (endTime == null);
+
+            newSchedule.addSlot(day, startTime, endTime);
+
+            String choice;
+            do {
+                logger.logCustom("Do you want to add another schedule? (yes/no): ");
+                choice = scanner.next();
+                if (!(choice.equalsIgnoreCase("yes") || choice.equalsIgnoreCase("no"))) {
+                    logger.logError("Invalid input. Please enter 'yes' or 'no'.");
+                }
+            } while (!(choice.equalsIgnoreCase("yes") || choice.equalsIgnoreCase("no")));
+
+            addMore = choice.equalsIgnoreCase("yes");
+        } while (addMore);
+
+        doctorToEdit.setSchedule(newSchedule);
+        logger.logInfo("Doctor's schedule updated successfully.");
+
+        logger.logInfo("==================== EDIT DOCTOR SCHEDULE FINISHED ====================");
+    }
     private static void addPatient() {
-        System.out.println("\u001B[34m====================  ADD NEW PATIENT  ====================\u001B[0m");
+        logger.logInfo("====================  ADD NEW PATIENT  ====================");
 
-        String name;
-        String id;
-        String phoneNumber;
+        String id, name, phoneNumber;
 
         do {
-            System.out.print("\u001B[3mEnter patient's name, surname: \u001B[0m");
+            logger.logCustom("Enter patient's name, surname: ");
             name = scanner.nextLine();
             if (name.isEmpty()) {
-                System.out.println("\u001B[31mError: Patient's name cannot be empty. Please fill in the data.\u001B[0m");
+                logger.logError("Patient's name cannot be empty. Please fill in the data.");
                 continue;
             }
 
             if (patientManager.findPatientByName(name) != null) {
-                System.out.println("\u001B[31mError: This patient already exists in the database.\u001B[0m");
+                logger.logError("This patient already exists in the database.");
                 continue;
             }
-
-            System.out.println("------------------------------------------------------");
         } while (name.isEmpty() || patientManager.findPatientByName(name) != null);
 
         do {
-            System.out.print("\u001B[3mEnter patient's phone number: \u001B[0m");
+            logger.logCustom("Enter patient's phone number: ");
             phoneNumber = scanner.nextLine();
             if (phoneNumber.isEmpty()) {
-                System.out.println("\u001B[31mError: Patient's phoneNumber4 cannot be empty. Please fill in the data.\u001B[0m");
+                logger.logError("Patient's phone number cannot be empty. Please fill in the data.");
             }
-            System.out.println("------------------------------------------------------");
         } while (phoneNumber.isEmpty());
 
         do {
-            System.out.print("\u001B[3mEnter patient's ID number: \u001B[0m");
+            logger.logCustom("Enter patient's ID number: ");
             id = scanner.nextLine();
             if (id.isEmpty()) {
-                System.out.println("\u001B[31mError: Patient's id cannot be empty. Please fill in the data.\u001B[0m");
+                logger.logError("Patient's ID cannot be empty. Please fill in the data.");
             }
-            System.out.println("------------------------------------------------------");
         } while (id.isEmpty());
 
         Patient patient = new Patient(id, name, phoneNumber);
         patientManager.registerPatient(patient);
 
-        System.out.println("\u001B[32mPatient added: \u001B[1m" + patient.getName() + "\u001B[0m");
-        System.out.println("\u001B[32m==================== ADD NEW PATIENT FINISHED SUCCESSFULLY ====================\u001B[0m");
+        logger.logInfo("Patient added: " + patient.getName());
+        logger.logInfo("==================== ADD NEW PATIENT FINISHED SUCCESSFULLY ====================");
     }
-
     private static void viewAllPatients() {
-        System.out.println("\u001B[34m==================== PATIENTS LIST ====================\u001B[0m");
+        logger.logInfo("==================== PATIENTS LIST ====================");
 
         if (patientManager.getPatients().isEmpty()) {
-            System.out.println("PATIENTS NOT FOUND");
+            logger.logCustom("==========Patients not found!==========");
         } else {
             for (Patient patient : patientManager.getPatients()) {
-                System.out.println("\u001B[32m========= Patient \u001B[1m" + patient.getName() + " =========\u001B[0m");
-                System.out.println("Name: " + patient.getName());
-                System.out.println("ID: " + patient.getId());
-                System.out.println("Phone: " + patient.getPhoneNumber());
-                System.out.println("--------------------------");
+                logger.logInfo("========= Patient " + patient.getName() + " =========");
+                logger.logCustom("Name: " + patient.getName());
+                logger.logCustom("ID: " + patient.getId());
+                logger.logCustom("Phone: " + patient.getPhoneNumber());
+                logger.logCustom("--------------------------");
             }
         }
     }
-
     private static void removePatient() {
-        System.out.println("\u001B[34m====================  REMOVE PATIENT  ====================\u001B[0m");
-        List<Patient> availablePatients = patientManager.getPatients();
+        logger.logInfo("====================  REMOVE PATIENT  ====================");
 
+        List<Patient> availablePatients = patientManager.getPatients();
         if (availablePatients.isEmpty()) {
-            System.out.println("\u001B[34mPatients list is empty!\u001B[0m");
+            logger.logCustom("Patients list is empty!");
         } else {
-            System.out.println("------ Patients list ------");
+            logger.logCustom("------ Patients list ------");
 
             for (Patient patient : availablePatients) {
-                System.out.println(patient.getName());
+                logger.logCustom(patient.getName());
             }
-            System.out.print("\u001B[3mEnter patient's name to remove: \u001B[0m");
+            logger.logCustom("Enter patient's name to remove: ");
             String name = scanner.nextLine();
 
-            patientManager.removePatient(name);
+            patientManager.removePatient(name); // remove Patient
         }
     }
+    private static void editPatient() {
+        logger.logInfo("====================  EDIT PATIENT INFORMATION  ====================");
 
-    ///// Appointment
+        List<Patient> patients = patientManager.getPatients();
+
+        if (patients.isEmpty()) {
+            logger.logError("No patients found.");
+            return;
+        }
+
+        logger.logInfo("Select a patient to edit:");
+        for (int i = 0; i < patients.size(); i++) {
+            logger.logCustom((i + 1) + ". " + patients.get(i).getName());
+        }
+
+        logger.logCustom("Enter the number of the patient you want to edit: ");
+        int patientIndex = scanner.nextInt();
+        scanner.nextLine();
+
+        if (patientIndex < 1 || patientIndex > patients.size()) {
+            logger.logError("Invalid patient number.");
+            return;
+        }
+
+        Patient patientToEdit = patients.get(patientIndex - 1);
+
+        logger.logCustom("Current ID: " + patientToEdit.getId());
+        logger.logCustom("Current Name: " + patientToEdit.getName());
+        logger.logCustom("Current Phone Number: " + patientToEdit.getPhoneNumber());
+
+        logger.logCustom("Enter the new name (or leave empty to keep current): ");
+        String newName = scanner.nextLine().trim();
+        if (!newName.isEmpty()) {
+            patientToEdit.setName(newName);
+            logger.logInfo("Name updated successfully.");
+        }
+
+        logger.logCustom("Enter the new phone number (or leave empty to keep current): ");
+        String newPhoneNumber = scanner.nextLine().trim();
+        if (!newPhoneNumber.isEmpty()) {
+            patientToEdit.setPhoneNumber(newPhoneNumber);
+            logger.logInfo("Phone number updated successfully.");
+        }
+
+        logger.logInfo("==================== EDIT PATIENT INFORMATION FINISHED ====================");
+    }
     private static void viewPatientAppointments() {
-        System.out.print("Enter patient's name: ");
+        logger.logCustom("Enter patient's name: ");
         String name = scanner.nextLine();
-        System.out.print("Enter patient's ID: ");
+
+        logger.logCustom("Enter patient's ID: ");
         String id = scanner.nextLine();
-        Patient patient = patientManager.findPatientByName(name);
-        if (patient != null && patient.getName().equalsIgnoreCase(name) && patient.getId().equalsIgnoreCase(id)) {
+
+        Patient patient = patientManager.findPatientByNameAndId(name, id);
+
+        if (patient != null) {
             List<Appointment> appointments = appointmentManager.getAppointmentsForPatient(patient);
+
             if (appointments.isEmpty()) {
-                System.out.println("You have no appointments with doctors.");
+                logger.logCustom("==================You have no appointments with doctors.==================");
             } else {
-                System.out.println("Your appointments with doctors:");
+                logger.logCustom("Your appointments with doctors:");
                 for (Appointment appointment : appointments) {
-                    System.out.println("Date and time: " + appointment.getTime() + ", Doctor: " + appointment.getDoctor().getName());
+                    logger.logCustom("Date and time: " + appointment.getTime() + ", Doctor: " + appointment.getDoctor().getName());
                 }
             }
         } else {
-            System.out.println("Patient with such name and ID not found.");
+            logger.logError("Patient with such name and ID not found.");
         }
     }
     private static void bookAppointment() {
-        System.out.print("Enter your name: ");
+        logger.logCustom("Enter your name: ");
         String name = scanner.nextLine().trim();
 
         if (name.isEmpty()) {
-            System.out.println("\u001B[31m" + "Name cannot be empty. Please enter your name." + "\u001B[0m");
+            logger.logError("Name cannot be empty. Please enter your name.");
             bookAppointment();
             return;
         }
 
         Patient patient = patientManager.findPatientByName(name);
         if (patient == null) {
-            System.out.println("\u001B[31m" + "Patient with such name not found. Please register." + "\u001B[0m");
+            logger.logError("Patient with such name not found. Please register.");
             return;
         }
 
-        System.out.print("Enter the doctor's specialization you want to book with: ");
+        logger.logCustom("Enter the doctor's specialization you want to book with: ");
         String specialization = scanner.nextLine();
 
         List<Doctor> availableDoctors = new ArrayList<>();
@@ -369,36 +572,36 @@ public class Main {
         }
 
         if (availableDoctors.isEmpty()) {
-            System.out.println("No doctors found with such specialization.");
+            logger.logCustom("No doctors found with such specialization.");
             return;
         }
 
-        System.out.println("Available doctors:");
+        logger.logInfo("Available doctors:");
         for (Doctor doctor : availableDoctors) {
-            System.out.println(doctor.getName());
+            logger.logCustom(doctor.getName());
         }
 
-        System.out.print("Choose a doctor: ");
+        logger.logCustom("Choose a doctor: ");
         String doctorName = scanner.nextLine();
 
         Doctor doctor = doctorManager.findDoctorByName(doctorName);
         if (doctor == null) {
-            System.out.println("\u001B[31m" + "Doctor with such name not found." + "\u001B[0m");
+            logger.logError("Doctor with such name not found.");
             return;
         }
 
-        System.out.println("Doctor's schedule for " + doctor.getName() + ":");
+        logger.logCustom("Doctor's schedule for " + doctor.getName() + ":");
         List<String> availableTimeSlots = appointmentManager.generateAvailableTimeSlots(doctor, doctor.getSchedule());
 
         if (!availableTimeSlots.isEmpty()) {
             for (String slot : availableTimeSlots) {
-                System.out.println(slot);
+                logger.logCustom(slot);
             }
 
             String time;
             boolean isAvailable = false;
             do {
-                System.out.print("Choose an available time slot from the doctor's schedule: ");
+                logger.logCustom("Choose an available time slot from the doctor's schedule: ");
                 time = scanner.nextLine().trim();
 
                 if (availableTimeSlots.contains(time)) {
@@ -407,21 +610,21 @@ public class Main {
                         if (!isSlotBooked) {
                             isAvailable = true;
                         } else {
-                            System.out.println("\u001B[31m" + "You already have an appointment with another doctor at this time." + "\u001B[0m"); // Красный цвет
+                            logger.logError("You already have an appointment with another doctor at this time.");
                         }
                     } else {
-                        System.out.println("\u001B[31m" + "Selected time slot is already occupied. Please choose another time." + "\u001B[0m"); // Красный цвет
+                        logger.logError("Selected time slot is already occupied. Please choose another time.");
                     }
                 } else {
-                    System.out.println("\u001B[31m" + "Invalid time slot. Please choose from the available time slots." + "\u001B[0m"); // Красный цвет
+                    logger.logError("Invalid time slot. Please choose from the available time slots.");
                 }
             } while (!isAvailable);
 
             appointmentManager.bookAppointment(doctor, patient, time);
-            System.out.println("\u001B[32m" + "Appointment successfully booked." + "\u001B[0m"); // Зеленый цвет
+            logger.logInfo("Appointment successfully booked.");
 
         } else {
-            System.out.println("No available time slots for today.");
+            logger.logCustom("No available time slots for today.");
         }
     }
 }

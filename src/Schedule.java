@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-class Schedule {
+public class Schedule {
     private final Map<DayOfWeek, LocalTime[]> scheduleMap;
 
     public Schedule() {
@@ -30,4 +30,9 @@ class Schedule {
         }
         return availableSlots;
     }
+
+    public LocalTime[] getSlot(DayOfWeek day) {
+        return this.scheduleMap.get(day);
+    }
 }
+
