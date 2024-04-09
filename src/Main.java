@@ -172,7 +172,6 @@ public class Main {
                     logger.logError("You are already working at this day. Please choose another day.");
                     continue;
                 }
-
                 do {
                     logger.logCustom("Enter start time (HH:MM): ");
                     String startTimeStr = scanner.next();
@@ -214,7 +213,6 @@ public class Main {
 
             doctorManager.registerDoctor(doctor);
 
-            logger.logCustom("-----------------------------------");
             logger.logInfo("Doctor added: " + doctor.getName());
             logger.logInfo("==================== ADD NEW DOCTOR FINISHED SUCCESSFULLY ====================");
         } catch (Exception e) {
