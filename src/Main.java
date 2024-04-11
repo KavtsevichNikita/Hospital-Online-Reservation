@@ -1,8 +1,8 @@
+import java.time.DayOfWeek;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.time.DayOfWeek;
-import java.time.LocalTime;
 
 public class Main {
     private static Scanner scanner = new Scanner(System.in);
@@ -10,15 +10,19 @@ public class Main {
     private static PatientManager patientManager = new PatientManager();
     private static AppointmentManager appointmentManager = new AppointmentManager();
     private static Logger logger = new Logger();
-    private static Patient patient1 = new Patient("P001", "Alice Johnson", "1234567890");
-    private static Patient patient2 = new Patient("P002", "Bob Brown", "0987654321");
 
     public static void main(String[] args) {
         int choice;
 
-        // init data for patients
-        patientManager.registerPatient(patient1);
-        patientManager.registerPatient(patient2);
+        Patient testPatient = new PatientBuilderImpl().setId("P1").setName("Nikita").setPhoneNumber("11111111").build();
+        patientManager.registerPatient(testPatient);
+
+        PersonFactory doctorFactory = new DoctorFactory();
+        Doctor testDoctor = doctorFactory.createPersonDoc("P1", "Nikita", "Хирург", new Schedule() {{
+            addSlot(DayOfWeek.MONDAY, LocalTime.of(9, 0), LocalTime.of(12, 0));
+        }});
+
+        doctorManager.registerDoctor(testDoctor);
 
         do {
             try {
@@ -225,6 +229,9 @@ public class Main {
         if (doctorManager.getDoctors().isEmpty()) {
             logger.logCustom("Doctors not found");
         } else {
+
+
+            // Facade
             for (Doctor doctor : doctorManager.getDoctors()) {
                 logger.logInfo("========= Doctor " + doctor.getName() + " =========");
                 logger.logCustom("Name: " + doctor.getName());
@@ -554,6 +561,7 @@ public class Main {
         }
 
         Patient patient = patientManager.findPatientByName(name);
+
         if (patient == null) {
             logger.logError("Patient with such name not found. Please register.");
             return;
@@ -620,7 +628,6 @@ public class Main {
 
             appointmentManager.bookAppointment(doctor, patient, time);
             logger.logInfo("Appointment successfully booked.");
-
         } else {
             logger.logCustom("No available time slots for today.");
         }

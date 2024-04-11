@@ -1,8 +1,8 @@
 import java.util.Objects;
 
 public abstract class Person implements Comparable<Person> {
-    private final String id;
-    private String name;
+    public String id;
+    public String name;
 
     public Person(String id, String name) {
         this.id = id;
@@ -37,4 +37,8 @@ public abstract class Person implements Comparable<Person> {
     public int compareTo(Person other) {
         return this.getName().compareTo(other.getName());
     }
+}
+
+interface PersonFactory {
+    Doctor createPersonDoc(String id, String name, String specialization, Schedule schedule);
 }

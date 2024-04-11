@@ -1,6 +1,6 @@
 import java.util.Objects;
 
-public class Doctor extends Person {
+public class Doctor extends Person implements Marker {
     private String specialization;
     private Schedule schedule;
 
@@ -39,5 +39,19 @@ public class Doctor extends Person {
     public int hashCode() {
         return Objects.hash(super.hashCode(), specialization, schedule);
     }
+}
+
+
+
+
+class DoctorFactory implements PersonFactory {
+
+    @Override
+    public Doctor createPersonDoc(String id, String name, String specialization, Schedule schedule) {
+        return new Doctor(id, name, specialization, schedule);
+    }
+}
+
+interface Marker {
 }
 
