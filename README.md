@@ -10,6 +10,7 @@ This Java application provides an online registration system for managing doctor
 - View patient's appointments
 
 ## Technologies Used
+![menu](https://github.com/KavtsevichNikita/Hospital-Online-Reservation/assets/77801467/b2db1af9-e29b-4c78-a76a-2a52f0fb7e32)
 
 - Java
 - Java.util package (ArrayList, List, Scanner)
