@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+
+// RECOMMENDED TO READ README>md
+
 public class Main {
     private static Scanner scanner = new Scanner(System.in);
     private static DoctorManager doctorManager = new DoctorManager();
@@ -229,8 +232,6 @@ public class Main {
         if (doctorManager.getDoctors().isEmpty()) {
             logger.logCustom("Doctors not found");
         } else {
-
-
             // Facade
             for (Doctor doctor : doctorManager.getDoctors()) {
                 logger.logInfo("========= Doctor " + doctor.getName() + " =========");
@@ -264,7 +265,7 @@ public class Main {
         logger.logCustom("Enter doctor's name to remove: ");
         String name = scanner.nextLine();
 
-        doctorManager.removeDoctor(name);  // remove doctor
+        doctorManager.removeDoctor(name);
     }
     private static void editDoctor() {
         logger.logInfo("====================  EDIT DOCTOR INFORMATION  ====================");
@@ -477,7 +478,7 @@ public class Main {
             logger.logCustom("Enter patient's name to remove: ");
             String name = scanner.nextLine();
 
-            patientManager.removePatient(name); // remove Patient
+            patientManager.removePatient(name);
         }
     }
     private static void editPatient() {

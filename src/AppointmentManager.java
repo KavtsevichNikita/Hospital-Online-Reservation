@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AppointmentManager {
-    private final List<Appointment> appointments;
+    protected List<Appointment> appointments;
 
     public AppointmentManager() {
         this.appointments = new ArrayList<>();

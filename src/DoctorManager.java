@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class DoctorManager {
-    private final List<Doctor> doctors;
+    protected List<Doctor> doctors;
 
     public DoctorManager() {
         this.doctors = new ArrayList<>();

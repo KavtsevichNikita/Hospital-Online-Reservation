@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Schedule {
-    private final Map<DayOfWeek, LocalTime[]> scheduleMap;
+    protected Map<DayOfWeek, LocalTime[]> scheduleMap;
 
     public Schedule() {
         this.scheduleMap = new HashMap<>();

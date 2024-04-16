@@ -1,9 +1,9 @@
 import java.util.Objects;
 
 public class Appointment implements Comparable<Appointment> {
-    private final Patient patient;
-    private final Doctor doctor;
-    private final String time;
+    protected Patient patient;
+    protected Doctor doctor;
+    protected String time;
 
     public Appointment(Patient patient, Doctor doctor, String time) {
         this.patient = patient;
