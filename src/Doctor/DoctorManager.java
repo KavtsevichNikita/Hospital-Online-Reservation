@@ -1,10 +1,10 @@
 package Doctor;
 
+import Logger.Logger;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
-import Logger.*;
+import HospitalError.*;
 
 public class DoctorManager {
     protected List<Doctor> doctors;
@@ -24,10 +24,9 @@ public class DoctorManager {
             if (doctor.getName().equalsIgnoreCase(name)) {
                 iterator.remove();
                 Logger.logInfo("==================== DOCTOR \"" + name.toUpperCase() + "\" DELETED SUCCESSFULLY ====================");
-                return;
+                break;
             }
         }
-        Logger.logError("==================== Error: Doctor.Doctor \"" + name.toUpperCase() + "\" NOT FOUND ==========================");
     }
     public Doctor findDoctorByName(String name) {
         for (Doctor doctor : doctors) {

@@ -3,7 +3,7 @@ import java.time.LocalTime;
 import java.util.*;
 import Appointment.*;
 import Doctor.*;
-import Logger.*;
+import HospitalError.HospitalError;
 import Patient.*;
 import Person.*;
 import Schedule.*;
@@ -102,10 +102,10 @@ public class Main {
                         hospital.logInfo("Exiting the application...");
                         break;
                     default:
-                        hospital.logError("Invalid choice. Please try again.");
+                        throw new HospitalError("Invalid choice. Please try again.", null);
                 }
-            } catch (Exception e) {
-                hospital.logError("An error occurred: " + e.getMessage());
+            } catch (HospitalError e) {
+                hospital.logError(e.getMessage());
                 scanner.nextLine();
                 choice = -1;
             }
@@ -247,7 +247,7 @@ public class Main {
         hospital.logInfo("==================== DOCTORS LIST ====================");
 
         if (hospital.getDoctors().isEmpty()) {
-            hospital.logCustom("Doctors not found");
+            hospital.logError("Doctors not found");
         } else {
             for (Doctor doctor : hospital.getDoctors()) {
                 hospital.logInfo("========= Doctor " + doctor.getName() + " =========");
@@ -256,7 +256,7 @@ public class Main {
                 hospital.logCustom("Schedule:");
                 List<String> availableSlots = doctor.getSchedule().getAvailableSlots();
                 if (availableSlots.isEmpty()) {
-                    hospital.logCustom("No available slots");
+                    hospital.logError("No available slots");
                 } else {
                     for (String slot : availableSlots) {
                         hospital.logCustom(slot);
@@ -273,14 +273,13 @@ public class Main {
     }
 
     // Remove doctor
-    private static void removeDoctor() {
+    private static void removeDoctor() throws HospitalError {
         hospital.logInfo("====================  REMOVE DOCTOR  ====================");
 
         List<Doctor> availableDoctors = hospital.getDoctors();
 
         if (availableDoctors.isEmpty()) {
-            hospital.logCustom("Doctors list is empty!");
-            return;
+            throw new HospitalError("Doctors list is empty!", availableDoctors);
         }
 
         hospital.logCustom("------ Doctors list ------");
@@ -484,7 +483,7 @@ public class Main {
         hospital.logInfo("==================== PATIENTS LIST ====================");
 
         if (hospital.getPatients().isEmpty()) {
-            hospital.logCustom("========== Patients not found! ==========");
+            hospital.logError("========== Patients not found! ==========");
         } else {
             for (Patient patient : hospital.getPatients()) {
                 hospital.logInfo("========= Patient " + patient.getName() + " =========");
@@ -572,7 +571,7 @@ public class Main {
     }
 
     // View created appointments of patient
-    private static void viewPatientAppointments() {
+    private static void viewPatientAppointments() throws HospitalError {
         hospital.logCustom("Enter patient's name: ");
         String name = scanner.nextLine();
 
@@ -593,7 +592,7 @@ public class Main {
                 }
             }
         } else {
-            hospital.logError("Patient with such name and ID not found.");
+            throw new HospitalError("Patient with such name and ID not found.", patient);
         }
     }
 
@@ -630,8 +629,7 @@ public class Main {
             return;
         }
 
-        hospital
-                .logInfo("Available doctors:");
+        hospital.logInfo("Available doctors:");
         for (Doctor doctor : availableDoctors) {
             hospital.logCustom(doctor.getName());
         }

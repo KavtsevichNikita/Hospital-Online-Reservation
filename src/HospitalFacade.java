@@ -1,5 +1,6 @@
 import java.util.List;
 import Doctor.*;
+import HospitalError.HospitalError;
 import Logger.Logger;
 import Patient.*;
 import Appointment.*;
@@ -68,4 +69,5 @@ public class HospitalFacade {
     public void logCustom(String message) {
         Logger.logCustom(message);
     }
+
 }

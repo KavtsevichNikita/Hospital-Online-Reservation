@@ -4,6 +4,7 @@ import java.util.Objects;
 import Person.*;
 import Schedule.*;
 
+
 public class Doctor extends Person implements Marker {
     private String specialization;
     private Schedule schedule;
