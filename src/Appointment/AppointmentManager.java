@@ -1,3 +1,8 @@
+package Appointment;
+
+import Patient.Patient;
+import Doctor.*;
+import Schedule.*;
 import java.util.ArrayList;
 import java.util.List;
 

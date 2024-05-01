@@ -1,3 +1,7 @@
+package Appointment;
+
+import Patient.*;
+import Doctor.*;
 import java.util.Objects;
 
 public class Appointment implements Comparable<Appointment> {
@@ -10,7 +14,6 @@ public class Appointment implements Comparable<Appointment> {
         this.doctor = doctor;
         this.time = time;
     }
-
     public Patient getPatient() {
         return patient;
     }

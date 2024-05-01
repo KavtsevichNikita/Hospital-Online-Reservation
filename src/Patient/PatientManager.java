@@ -1,3 +1,5 @@
+package Patient;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -28,7 +30,7 @@ public class PatientManager {
                 return;
             }
         }
-        System.out.println("\u001B[31m==================== Error: Patient \"" + name.toUpperCase() + "\" NOT FOUND ==========================\u001B[0m");
+        System.out.println("\u001B[31m==================== Error: Patient.Patient \"" + name.toUpperCase() + "\" NOT FOUND ==========================\u001B[0m");
     }
 
     public Patient findPatientByName(String name) {
@@ -46,17 +48,5 @@ public class PatientManager {
             return patient;
         }
         return null;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof PatientManager that)) return false;
-        return Objects.equals(patients, that.patients);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(patients);
     }
 }

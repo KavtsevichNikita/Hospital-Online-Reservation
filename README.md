@@ -1,6 +1,7 @@
 # Online Registration System
 
-This Java application provides an online registration system for managing doctors, patients, and appointments. It allows users to add, view, edit, and remove doctors and patients, as well as book appointments with available doctors.
+This Java application provides an online registration system for managing doctors, patients, and appointments. 
+It allows users to add, view, edit, and remove doctors and patients, as well as book appointments with available doctors.
 
 ## Features
 
@@ -21,21 +22,21 @@ This Java application provides an online registration system for managing doctor
 ### Main Class
 - `main(String[] args)`: The entry point of the program that displays the main menu and handles user input for various actions.
 
-### DoctorManager Class
+### Doctor.DoctorManager Class
 - `registerDoctor(Doctor doctor)`: Registers a new doctor.
 - `getDoctors()`: Retrieves the list of all doctors.
 - `findDoctorById(String id)`: Finds a doctor by their ID.
 - `findDoctorByName(String name)`: Finds a doctor by their name.
 - `removeDoctor(String name)`: Removes a doctor by their name.
 
-### PatientManager Class
+### Patient.PatientManager Class
 - `registerPatient(Patient patient)`: Registers a new patient.
 - `getPatients()`: Retrieves the list of all patients.
 - `findPatientByName(String name)`: Finds a patient by their name.
 - `findPatientByNameAndId(String name, String id)`: Finds a patient by their name and ID.
 - `removePatient(String name)`: Removes a patient by their name.
 
-### AppointmentManager Class
+### Appointment.AppointmentManager Class
 - `generateAvailableTimeSlots(Doctor doctor, Schedule schedule)`: Generates available time slots for booking appointments.
 - `isTimeSlotOccupied(Doctor doctor, String time)`: Checks if a specific time slot is occupied.
 - `isTimeSlotBooked(String time, Patient patient)`: Checks if a specific time slot is booked by a patient.
@@ -56,26 +57,29 @@ This Java application provides an online registration system for managing doctor
 - `equals(Object o)`: Indicates whether some other object is "equal to" this one.
 - `hashCode()`: Returns a hash code value for the object.
 
-### Interface: PersonFactory
+### Interface: Person.PersonFactory
 - `createPersonDoc(String id, String name, String specialization, Schedule schedule)`: Creates a new doctor object.
 
-### Interface: PatientBuilder
+### Interface: Patient.PatientBuilder
 - `setPhoneNumber(String phoneNumber)`: Sets the phone number of the patient.
 - `setId(String id)`: Sets the ID of the patient.
 - `setName(String name)`: Sets the name of the patient.
 - `build()`: Constructs and returns the patient object.
 
-### Abstract Class: Marker
-- Marker interface indicating that a class is a doctor.
+### Doctor.Marker: 
+- Doctor.Marker interface indicating that a class is a doctor.
+
+### HospitalFacade:
+- HospitalFacade a single simplified class that connects a number of more complex classes.
 
 ## Design Patterns
 
 ### Creation Patterns
-1. Factory Method Pattern: `PersonFactory` interface and `DoctorFactory` class implement the factory method pattern for creating doctor objects.
-2. Builder Pattern: `PatientBuilder` interface and `PatientBuilderImpl` class implement the builder pattern for constructing patient objects.
+1. Factory Method Pattern: `Person.PersonFactory` interface and `Doctor.DoctorFactory` class implement the factory method pattern for creating doctor objects.
+2. Builder Pattern: `Patient.PatientBuilder` interface and `Patient.PatientBuilderImpl` class implement the builder pattern for constructing patient objects.
 
 ### Structural Patterns
-1. Marker Interface Pattern: `Marker` interface acts as a marker for classes implementing doctor functionalities.
+1. Doctor.Marker Interface Pattern: `Doctor.Marker` interface acts as a marker for classes implementing doctor functionalities. You can find using Marker in viewAllDoctors() and viewAllPatients()
 
 ## How to Use
 

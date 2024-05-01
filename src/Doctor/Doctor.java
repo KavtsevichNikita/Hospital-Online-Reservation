@@ -1,4 +1,8 @@
+package Doctor;
+
 import java.util.Objects;
+import Person.*;
+import Schedule.*;
 
 public class Doctor extends Person implements Marker {
     private String specialization;
@@ -42,16 +46,4 @@ public class Doctor extends Person implements Marker {
 }
 
 
-
-
-class DoctorFactory implements PersonFactory {
-
-    @Override
-    public Doctor createPersonDoc(String id, String name, String specialization, Schedule schedule) {
-        return new Doctor(id, name, specialization, schedule);
-    }
-}
-
-interface Marker {
-}
 

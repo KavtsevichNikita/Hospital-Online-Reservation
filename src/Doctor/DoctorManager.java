@@ -1,7 +1,10 @@
+package Doctor;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import Logger.*;
 
 public class DoctorManager {
     protected List<Doctor> doctors;
@@ -24,7 +27,7 @@ public class DoctorManager {
                 return;
             }
         }
-        Logger.logError("==================== Error: Doctor \"" + name.toUpperCase() + "\" NOT FOUND ==========================");
+        Logger.logError("==================== Error: Doctor.Doctor \"" + name.toUpperCase() + "\" NOT FOUND ==========================");
     }
     public Doctor findDoctorByName(String name) {
         for (Doctor doctor : doctors) {
@@ -41,16 +44,5 @@ public class DoctorManager {
             }
         }
         return false;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof DoctorManager that)) return false;
-        return Objects.equals(doctors, that.doctors);
-    }
-    @Override
-    public int hashCode() {
-        return Objects.hash(doctors);
     }
 }
