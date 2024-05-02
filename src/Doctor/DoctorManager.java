@@ -12,12 +12,18 @@ public class DoctorManager {
     public DoctorManager() {
         this.doctors = new ArrayList<>();
     }
+
+    // get all doctors
     public List<Doctor> getDoctors() {
         return doctors;
     }
+
+    // create new doctor
     public void registerDoctor(Doctor doctor) {
         doctors.add(doctor);
     }
+
+    // remove doctor ( use iterator because of deleting selected item)
     public void removeDoctor(String name) {
         for (Iterator<Doctor> iterator = doctors.iterator(); iterator.hasNext();) {
             Doctor doctor = iterator.next();
@@ -28,6 +34,8 @@ public class DoctorManager {
             }
         }
     }
+
+    // find doctor by his/her name
     public Doctor findDoctorByName(String name) {
         for (Doctor doctor : doctors) {
             if (doctor.getName().equalsIgnoreCase(name)) {
@@ -36,6 +44,8 @@ public class DoctorManager {
         }
         return null;
     }
+
+    // find doctor by id (return true/false) if we found/not found doctor
     public Boolean findDoctorById(String id) {
         for (Doctor doctor : doctors) {
             if (doctor.getId().equalsIgnoreCase(id)) {

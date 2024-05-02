@@ -13,11 +13,14 @@ public class AppointmentManager {
         this.appointments = new ArrayList<>();
     }
 
+    // create new appointment
     public void bookAppointment(Doctor doctor, Patient patient, String time) {
         Appointment appointment = new Appointment(patient, doctor, time);
         appointments.add(appointment);
     }
 
+
+    // get patient appointments
     public List<Appointment> getAppointmentsForPatient(Patient patient) {
         List<Appointment> patientAppointments = new ArrayList<>();
         for (Appointment appointment : appointments) {
@@ -28,6 +31,7 @@ public class AppointmentManager {
         return patientAppointments;
     }
 
+    // check is slot occupied
     public boolean isTimeSlotOccupied(Doctor doctor, String time) {
         for (Appointment appointment : appointments) {
             if (appointment.getDoctor().equals(doctor) && appointment.getTime().equalsIgnoreCase(time)) {
@@ -37,6 +41,7 @@ public class AppointmentManager {
         return true;
     }
 
+    // check is slot booked
     public boolean isTimeSlotBooked(String timeSlot, Patient patient) {
         for (Appointment appointment : appointments) {
             if (appointment.getTime().equals(timeSlot) && appointment.getPatient().equals(patient)) {
@@ -46,6 +51,8 @@ public class AppointmentManager {
         return false;
     }
 
+    // generate time slots (every patient have 15 minutes for every appointment)
+    //TODO fixed start and end time ( 10:60 - 10:15) or (10:45-10:60)
     public List<String> generateAvailableTimeSlots(Doctor doctor, Schedule schedule) {
         List<String> availableTimeSlots = new ArrayList<>();
         List<String> slots = schedule.getAvailableSlots();

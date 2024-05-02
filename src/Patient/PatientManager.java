@@ -16,10 +16,12 @@ public class PatientManager {
         return patients;
     }
 
+    // create new patient
     public void registerPatient(Patient patient) {
         patients.add(patient);
     }
 
+    // remove patient
     public void removePatient(String name) {
         Iterator<Patient> iterator = patients.iterator();
         while (iterator.hasNext()) {
@@ -33,6 +35,7 @@ public class PatientManager {
         System.out.println("\u001B[31m==================== Error: Patient.Patient \"" + name.toUpperCase() + "\" NOT FOUND ==========================\u001B[0m");
     }
 
+    // find patient by name
     public Patient findPatientByName(String name) {
         for (Patient patient : patients) {
             if (patient.getName().equalsIgnoreCase(name)) {
@@ -42,6 +45,7 @@ public class PatientManager {
         return null;
     }
 
+    // find patient by name and id
     public Patient findPatientByNameAndId(String name, String id) {
         Patient patient = findPatientByName(name);
         if (patient != null && patient.getId().equalsIgnoreCase(id)) {

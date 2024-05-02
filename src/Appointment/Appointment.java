@@ -14,6 +14,8 @@ public class Appointment implements Comparable<Appointment> {
         this.doctor = doctor;
         this.time = time;
     }
+
+    // Getters
     public Patient getPatient() {
         return patient;
     }

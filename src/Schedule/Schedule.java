@@ -13,12 +13,17 @@ public class Schedule {
         this.scheduleMap = new HashMap<>();
     }
 
+    // Adding new time slot for doctor (Day, startTime and EndTime)
     public void addSlot(DayOfWeek day, LocalTime startTime, LocalTime endTime) {
         this.scheduleMap.put(day, new LocalTime[]{startTime, endTime});
     }
+
+    // Check of already existed slot
     public boolean hasSlot(DayOfWeek day) {
         return this.scheduleMap.containsKey(day);
     }
+
+    // Get all available slots
     public List<String> getAvailableSlots() {
         List<String> availableSlots = new ArrayList<>();
         for (Map.Entry<DayOfWeek, LocalTime[]> entry : scheduleMap.entrySet()) {

@@ -4,7 +4,6 @@ import Person.*;
 
 public class Patient extends Person {
     protected String phoneNumber;
-
     public Patient(String id, String name, String phoneNumber) {
         super(id, name);
         this.phoneNumber = phoneNumber;

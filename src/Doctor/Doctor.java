@@ -15,16 +15,17 @@ public class Doctor extends Person implements Marker {
         this.schedule = schedule;
     }
 
+    // getters
     public String getSpecialization() {
         return specialization;
     }
-
-    public void setSpecialization(String specialization) {
-        this.specialization = specialization;
-    }
-
     public Schedule getSchedule() {
         return schedule;
+    }
+
+    // Setters
+    public void setSpecialization(String specialization) {
+        this.specialization = specialization;
     }
 
     public void setSchedule(Schedule schedule) {

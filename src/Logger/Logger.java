@@ -1,6 +1,8 @@
 package Logger;
 
 public class Logger {
+
+    // Log a message with different colors :)
     public static void logError(String message) {
         System.out.println("\u001B[31mError: " + message + "\u001B[0m"); // Red color
     }
