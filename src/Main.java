@@ -24,17 +24,18 @@ public class Main {
 
         hospital.registerPatient(testPatient);
         hospital.registerPatient(testPatient2);
+
         viewAllPatients();
         hospital.logInfo("\n");
 
         // Factory (Added test doctors)
         PersonFactory doctorFactory = new DoctorFactory();
-        Doctor testDoctor = doctorFactory.createPersonDoc("D1", "Nikita", "Surgeon", new Schedule() {{
+        Doctor testDoctor = (Doctor) doctorFactory.createPersonDoc("D1", "Nikita", "Surgeon", new Schedule() {{
             addSlot(DayOfWeek.MONDAY, LocalTime.of(9, 0), LocalTime.of(12, 0));
-        }});
-        Doctor testDoctor2 = doctorFactory.createPersonDoc("D2", "Ihor", "Dentist", new Schedule() {{
+        }}, "");
+        Doctor testDoctor2 = (Doctor) doctorFactory.createPersonDoc("D2", "Ihor", "Dentist", new Schedule() {{
             addSlot(DayOfWeek.WEDNESDAY, LocalTime.of(12, 0), LocalTime.of(17, 0));
-        }});
+        }}, "");
 
         hospital.registerDoctor(testDoctor);
         hospital.registerDoctor(testDoctor2);
@@ -117,7 +118,6 @@ public class Main {
                 choice = -1;
             }
         } while (choice != 0);
-
     }
 
     // Add new doctor
@@ -332,10 +332,17 @@ public class Main {
         }
 
         hospital.logCustom("Enter the number of the doctor you want to edit: ");
-        int doctorIndex = scanner.nextInt();
-        scanner.nextLine();
+        int doctorIndex;
 
-        if (!doctorIndex && doctorIndex < 1 || doctorIndex > doctors.size()) {
+        if (scanner.hasNextInt()) {
+            doctorIndex = scanner.nextInt();
+            scanner.nextLine();
+        } else {
+            hospital.logError("Invalid input. Please enter a number for doctor index.");
+            return;
+        }
+
+        if ( doctorIndex < 1 || doctorIndex > doctors.size()) {
             hospital.logError("Invalid doctor number.");
             return;
         }
@@ -345,8 +352,11 @@ public class Main {
 
         hospital.logCustom("Current Name: " + doctorToEdit.getName());
         hospital.logCustom("Current Specialization: " + doctorToEdit.getSpecialization());
-        hospital.logCustom("Current Schedule: " + doctorToEdit.getSchedule());
+        hospital.logCustom("Current Schedule: " );
 
+        for (String slot : doctorToEdit.getSchedule().getAvailableSlots()) {
+            hospital.logCustom(slot);
+        }
 
         /// Change selected doctor data, if empty - saved old data
         hospital.logCustom("Enter the new name (or leave empty to keep current): ");
@@ -363,15 +373,19 @@ public class Main {
             hospital.logInfo("Specialization updated successfully.");
         }
 
-
         // Schedule update
+        String editScheduleChoice;
+        do {
+            hospital.logCustom("Would you like to edit the schedule? (yes/no): ");
+            editScheduleChoice = scanner.next();
+            if (!(editScheduleChoice.equalsIgnoreCase("yes") || editScheduleChoice.equalsIgnoreCase("no"))) {
+                hospital.logError("Invalid input. Please enter 'yes' or 'no'.");
+            }
+        } while (!(editScheduleChoice.equalsIgnoreCase("yes") || editScheduleChoice.equalsIgnoreCase("no")));
 
-        hospital.logCustom("Would you like to edit the schedule? (yes/no): ");
-        String editScheduleChoice = scanner.nextLine().trim();
         if (editScheduleChoice.equalsIgnoreCase("yes")) {
             editDoctorSchedule(doctorToEdit);
         }
-
         hospital.logInfo("==================== EDIT DOCTOR INFORMATION FINISHED ====================");
     }
 
@@ -505,14 +519,20 @@ public class Main {
             if (id.isEmpty()) {
                 hospital.logError("Patient's ID cannot be empty. Please fill in the data.");
             }
-        } while (id.isEmpty());
+
+            if (hospital.findPatientById(id)) {
+                hospital.logError("Patient with such id already exists in the database.");
+//                continue;
+            }
+
+        } while (id.isEmpty() || hospital.findPatientById(id));
 
 
         // Add new patient
         Patient patient = new Patient(id, name, phoneNumber);
         hospital.registerPatient(patient);
 
-        hospital.logInfo("Patient added: " + patient.getName());
+//        hospital.logInfo("Patient added: " + patient.getName());
         hospital.logInfo("==================== ADD NEW PATIENT FINISHED SUCCESSFULLY ====================");
     }
 
@@ -548,7 +568,7 @@ public class Main {
         // Get all our patients
         List<Patient> availablePatients = hospital.getPatients();
 
-        // Check is patient's list empty or not
+        // Check if patients list is empty or not
         if (availablePatients.isEmpty()) {
             hospital.logCustom("Patients list is empty!");
         } else {
@@ -557,9 +577,27 @@ public class Main {
             for (Patient patient : availablePatients) {
                 hospital.logCustom(patient.getName());
             }
-            hospital.logCustom("Enter patient's name to remove: ");
-            String name = scanner.nextLine();
 
+            boolean patientFound = false;
+            String name;
+            do {
+                hospital.logCustom("Enter patient's name to remove: ");
+                name = scanner.nextLine();
+
+                // Check if the entered name exists in the list
+                for (Patient patient : availablePatients) {
+                    if (patient.getName().equalsIgnoreCase(name)) {
+                        patientFound = true;
+                        break;
+                    }
+                }
+
+                if (!patientFound) {
+                    hospital.logError("Patient not found. Please enter a valid name.");
+                }
+            } while (!patientFound);
+
+            // Remove patient only if found
             hospital.removePatient(name);
         }
     }
@@ -569,6 +607,7 @@ public class Main {
         hospital.logInfo("====================  EDIT PATIENT INFORMATION  ====================");
 
         List<Patient> patients = hospital.getPatients();
+        int patientIndex;
 
         // Check is patient's list empty or not
         if (patients.isEmpty()) {
@@ -583,14 +622,21 @@ public class Main {
         }
 
         hospital.logCustom("Enter the number of the patient you want to edit: ");
-        int patientIndex = scanner.nextInt();
-        scanner.nextLine();
 
-        if (patientIndex < 1 || patientIndex > patients.size()) {
+        if (scanner.hasNextInt()) {
+            patientIndex = scanner.nextInt();
+            scanner.nextLine();
+        } else {
+            hospital.logError("Invalid input. Please enter a number for patient index.");
+            return;
+        }
+
+        if ( patientIndex < 1 || patientIndex > patients.size()) {
             hospital.logError("Invalid patient number.");
             return;
         }
 
+        // Get current data of selected patient
         Patient patientToEdit = patients.get(patientIndex - 1);
 
         // Patient data to edit
@@ -667,11 +713,25 @@ public class Main {
             return;
         }
 
+        hospital.logCustom("Available specializations: ");
+        Set<String> specializations = new HashSet<>();
+        for (Doctor doctor : hospital.getDoctors()) {
+            specializations.add(doctor.getSpecialization().toLowerCase());
+        }
+        for (String spec : specializations) {
+            hospital.logCustom(spec);
+        }
 
-        // Enter specialization of doctor
-        //TODO get a list of all specializations we have (get a specialization from doctor)
-        hospital.logCustom("Enter the doctor's specialization you want to book with: ");
-        String specialization = scanner.nextLine();
+        String specialization;
+        boolean validSpecialization;
+        do {
+            hospital.logInfo("Enter the doctor's specialization you want to book with: ");
+            specialization = scanner.nextLine();
+            validSpecialization = specializations.contains(specialization);
+            if (!validSpecialization) {
+                hospital.logError("Invalid specialization. Please enter a valid specialization.");
+            }
+        } while (!validSpecialization);
 
         List<Doctor> availableDoctors = new ArrayList<>();
         for (Doctor doctor : hospital.getDoctors()) {
@@ -684,7 +744,6 @@ public class Main {
             hospital.logCustom("No doctors found with such specialization.");
             return;
         }
-
 
         // List of available doctors
         hospital.logInfo("Available doctors:");
@@ -700,7 +759,6 @@ public class Main {
             hospital.logError("Doctor with such name not found.");
             return;
         }
-
 
         // Get schedule of selected doctor
         hospital.logCustom("Doctor's schedule for " + doctor.getName() + ":");

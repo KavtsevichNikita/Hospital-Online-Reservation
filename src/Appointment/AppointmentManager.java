@@ -74,16 +74,18 @@ public class AppointmentManager {
                 String formattedTime = String.format("%02d:%02d", currentHour, currentMinute);
 
                 for (int i = 0; i < 4; i++) {
+                    currentMinute += 15;
+
                     if (currentMinute == 60) {
                         currentMinute = 0;
                         currentHour++;
                     }
 
-                    if (currentHour == endHour && currentMinute >= endMinute) {
+                    if (currentHour > endHour || (currentHour == endHour && currentMinute >= endMinute)) {
                         break;
                     }
 
-                    String nextMinute = String.format("%02d", currentMinute + 15);
+                    String nextMinute = String.format("%02d", currentMinute);
                     String nextTime = String.format("%02d:%s", currentHour, nextMinute);
                     String timeSlot = day + " " + formattedTime + "-" + nextTime;
 
@@ -92,7 +94,6 @@ public class AppointmentManager {
                     }
 
                     formattedTime = nextTime;
-                    currentMinute += 15;
                 }
             }
         }

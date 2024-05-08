@@ -1,6 +1,8 @@
 package Doctor;
 
 import java.util.Objects;
+
+import Logger.Logger;
 import Person.*;
 import Schedule.*;
 
@@ -33,12 +35,16 @@ public class Doctor extends Person implements Marker {
     }
 
     @Override
+    public void getInfo() {
+        Logger.logInfo("Doctor" + getName() + " is treating patients in the field of " + specialization);
+    }
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Doctor doctor)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        return Objects.equals(specialization, doctor.specialization) &&
-                Objects.equals(schedule, doctor.schedule);
+        Doctor doctor = (Doctor) o;
+        return Objects.equals(specialization, doctor.specialization) && Objects.equals(schedule, doctor.schedule);
     }
 
     @Override

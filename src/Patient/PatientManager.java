@@ -1,9 +1,10 @@
 package Patient;
 
+import Logger.Logger;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 
 public class PatientManager {
     protected List<Patient> patients;
@@ -28,11 +29,10 @@ public class PatientManager {
             Patient patient = iterator.next();
             if (patient.getName().equalsIgnoreCase(name)) {
                 iterator.remove();
-                System.out.println("\u001B[32m==================== PATIENT \"" + name.toUpperCase() + "\" DELETED SUCCESSFULLY ===================\u001B[0m");
+                Logger.logInfo("PATIENT \"" + name.toUpperCase() + "\" DELETED SUCCESSFULLY");
                 return;
             }
         }
-        System.out.println("\u001B[31m==================== Error: Patient.Patient \"" + name.toUpperCase() + "\" NOT FOUND ==========================\u001B[0m");
     }
 
     // find patient by name
@@ -43,6 +43,15 @@ public class PatientManager {
             }
         }
         return null;
+    }
+
+    public boolean findPatientById(String id) {
+        for (Patient patient : patients) {
+            if (patient.getId().equalsIgnoreCase(id)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // find patient by name and id

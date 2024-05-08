@@ -4,7 +4,6 @@ import Logger.Logger;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import HospitalError.*;
 
 public class DoctorManager {
     protected List<Doctor> doctors;

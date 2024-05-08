@@ -1,5 +1,8 @@
 package Patient;
 import java.util.Objects;
+
+import Doctor.Marker;
+import Logger.Logger;
 import Person.*;
 
 public class Patient extends Person {
@@ -14,6 +17,12 @@ public class Patient extends Person {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
+    @Override
+    public void getInfo() {
+        Logger.logCustom("Patient " + getName() + " is undergoing treatment");
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

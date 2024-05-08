@@ -45,6 +45,8 @@ public class HospitalFacade {
     public Patient findPatientByNameAndId(String name, String id) {
         return patientManager.findPatientByNameAndId(name, id);
     }
+
+    public Boolean findPatientById(String id) { return patientManager.findPatientById(id); }
     public void bookAppointment(Doctor doctor, Patient patient, String time) {
         appointmentManager.bookAppointment(doctor, patient, time);
     }
@@ -69,5 +71,4 @@ public class HospitalFacade {
     public void logCustom(String message) {
         Logger.logCustom(message);
     }
-
 }
